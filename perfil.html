@@ -765,7 +765,7 @@ footer {
           </div>
         </div>
         <a href="perfil.html" class="btn-dropdown-option" data-i18n="dropdown_profile">Perfil</a>
-        <button type="button" class="btn-dropdown-logout" onclick="handleLogout()" data-i18n="dropdown_logout">Cerrar sesión</button>
+        <button type="button" class="btn-dropdown-logout" id="btnLogout" data-i18n="dropdown_logout">Cerrar sesión</button>
       </div>
     </div>
   </div>
@@ -1052,7 +1052,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  const database = getDatabase(app);
+  let database = null;
+  try {
+    database = getDatabase(app);
+  } catch (error) {
+    console.error('Realtime Database no está disponible:', error);
+  }
   let unsubscribeConnected = null;
   let unsubscribeOnlineUsers = null;
   let presenceConnectionRef = null;
@@ -1114,6 +1119,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function startPresence(user) {
+    if (!database) return;
     const connectionRef = push(ref(database, `onlineUsers/${user.uid}`));
     const name = user.displayName || user.email?.split('@')[0] || "Usuario";
     presenceConnectionRef = connectionRef;
@@ -1164,16 +1170,18 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('dropdownUserEmail').innerText = email;
       document.getElementById('dropdownUserEmail').title = email;
       
-      startPresence(user);
       renderOnlineUsersList([{ uid: user.uid, name }]);
-      unsubscribeOnlineUsers = onValue(
-        ref(database, 'onlineUsers'),
-        (snapshot) => renderOnlineUsers(snapshot, user),
-        (error) => {
-          console.error('No se pudo leer la presencia:', error);
-          renderOnlineUsersList([{ uid: user.uid, name }]);
-        }
-      );
+      if (database) {
+        startPresence(user);
+        unsubscribeOnlineUsers = onValue(
+          ref(database, 'onlineUsers'),
+          (snapshot) => renderOnlineUsers(snapshot, user),
+          (error) => {
+            console.error('No se pudo leer la presencia:', error);
+            renderOnlineUsersList([{ uid: user.uid, name }]);
+          }
+        );
+      }
     } else {
       document.getElementById('userNameDisplay').innerText = "jair ibba";
       document.getElementById('userEmailDisplay').innerText = "jairibba0018@gmail.com";
@@ -1193,15 +1201,22 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   window.handleLogout = async () => {
-    if (confirm("¿Deseas cerrar sesión?")) {
-      if (presenceConnectionRef) {
-        await remove(presenceConnectionRef).catch(() => {});
-        presenceConnectionRef = null;
-      }
+    const logoutButton = document.getElementById('btnLogout');
+    if (logoutButton?.disabled) return;
+    if (logoutButton) logoutButton.disabled = true;
+
+    try {
+      if (unsubscribeConnected) unsubscribeConnected();
+      if (unsubscribeOnlineUsers) unsubscribeOnlineUsers();
       await signOut(auth);
-      window.location.href = "index.html";
+      window.location.replace("index.html");
+    } catch (error) {
+      console.error('No se pudo cerrar la sesión:', error);
+      if (logoutButton) logoutButton.disabled = false;
     }
   };
+
+  document.getElementById('btnLogout').addEventListener('click', window.handleLogout);
 </script>
 
 <!-- CANVAS DE FONDO ESTRELLADO / GALAXIA -->
