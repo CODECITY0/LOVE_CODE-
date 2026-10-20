@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membresía VIP - LOVE CODE</title>
+  <style>
+    :root {
+      --bg-color: #050510;
+      --text-color: #ffffff;
+      --text-muted: #aaaaaa;
+      --gold: #d4a373;
+      --pink: #ff2e88;
+      --cyan: #00bcd4;
+      --border-color: rgba(212, 163, 115, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    canvas#galaxy {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin-top: 20px;
+    }
+
+    .btn-volver {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 20px;
+      transition: transform 0.2s;
+    }
+
+    .btn-volver:hover {
+      transform: translateX(-4px);
+    }
+
+    .header-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header-section h1 {
+      font-size: 36px;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .header-section h1 span {
+      background: linear-gradient(90deg, var(--gold), var(--pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-section p {
+      color: var(--text-muted);
+      font-size: 15px;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    /* Grid de Planes */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+    }
+
+    .plan-card {
+      background: rgba(15, 15, 30, 0.85);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .plan-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(212, 163, 115, 0.2);
+    }
+
+    .plan-card.featured {
+      border-color: var(--pink);
+      box-shadow: 0 0 20px rgba(255, 46, 136, 0.2);
+    }
+
+    .badge-popular {
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      background: var(--pink);
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+    }
+
+    .plan-name {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .plan-price {
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+
+    .plan-price span {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: normal;
+    }
+
+    .plan-features {
+      list-style: none;
+      margin-bottom: 30px;
+      flex-grow: 1;
+    }
+
+    .plan-features li {
+      font-size: 14px;
+      color: #ddd;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-join {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: var(--gold);
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: filter 0.3s ease;
+    }
+
+    .plan-card.featured .btn-join {
+      background: var(--pink);
+    }
+
+    .btn-join:hover {
+      filter: brightness(1.15);
+    }
+
+    @media (max-width: 768px) {
+      .plans-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="galaxy"></canvas>
+
+  <div class="container">
+    <a href="index.html" class="btn-volver">← Volver al inicio</a>
+
+    <div class="header-section">
+      <h1>Planes de <span>Membresía</span></h1>
+      <p>Obtén acceso ilimitado a todas nuestras plantillas VIP, soporte prioritario y diseños exclusivos.</p>
+    </div>
+
+    <div class="plans-grid">
+      <!-- Plan Básico -->
+      <div class="plan-card">
+        <div class="plan-name">Miembro VIP</div>
+        <div class="plan-price">$...  <span>/ mes</span></div>
+        
+        <ul class="plan-features">
+          <li>✨ Acceso a plantillas VIP básicas</li>
+          <li>⚡ Descarga inmediata de archivos</li>
+          <li>💬 Soporte técnico por WhatsApp</li>
+          <li>🎉 Sin marcas de agua</li>
+        </ul>
+
+        <a href="https://patreon.com/tu-usuario" target="_blank" class="btn-join">Unirme con Patreon</a>
+      </div>
+
+      <!-- Plan Pro (Destacado) -->
+      <div class="plan-card featured">
+        <span class="badge-popular">Recomendado</span>
+        <div class="plan-name">Miembro Legendario</div>
+        <div class="plan-price">$... <span>/ mes</span></div>
+        
+        <ul class="plan-features">
+          <li>💎 Acceso TOTAL a todo el catálogo VIP</li>
+          <li>🎨 Solicitud de plantillas personalizadas</li>
+          <li>⚡ Descarga inmediata de archivos</li>
+          <li>⭐ Rol VIP exclusivo en la comunidad</li>
+          <li>💬 Soporte técnico directo y preferencial</li>
+        </ul>
+
+        <a href="https://patreon.com/tu-usuario" target="_blank" class="btn-join">Unirme con Patreon</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Canvas Galaxia
+    const c = document.getElementById('galaxy'), x = c.getContext('2d');
+    c.width = window.innerWidth; c.height = window.innerHeight;
+    let stars = Array.from({length: 200}, () => ({
+      x: Math.random() * c.width,
+      y: Math.random() * c.height,
+      r: Math.random() * 1.5,
+      s: Math.random() * 0.5
+    }));
+    function draw() {
+      x.fillStyle = '#050510'; x.fillRect(0, 0, c.width, c.height);
+      stars.forEach(s => {
+        x.beginPath(); x.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        x.fillStyle = 'white'; x.fill();
+        s.y += s.s; if (s.y > c.height) s.y = 0;
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
+</html>

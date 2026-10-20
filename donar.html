@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donar - LOVE CODE</title>
+  <style>
+    :root {
+      --bg-color: #050510;
+      --text-color: #ffffff;
+      --text-muted: #aaaaaa;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --border-color: rgba(255, 46, 136, 0.25);
+      --cyan: #00bcd4;
+      --pink: #ff2e88;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    canvas#galaxy {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 650px;
+      margin-top: 30px;
+      background: rgba(15, 15, 30, 0.85);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 35px 30px;
+      box-shadow: 0 0 30px rgba(0, 188, 212, 0.15);
+    }
+
+    .btn-volver {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      margin-bottom: 25px;
+      transition: transform 0.2s;
+    }
+
+    .btn-volver:hover {
+      transform: translateX(-4px);
+    }
+
+    .header-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header-section h1 {
+      font-size: 32px;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .header-section h1 span {
+      background: linear-gradient(90deg, var(--cyan), var(--pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-section p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* Selector de Montos */
+    .amount-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #ddd;
+    }
+
+    .amount-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 25px;
+    }
+
+    .amount-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: white;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .amount-btn:hover, .amount-btn.active {
+      background: var(--cyan);
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
+    }
+
+    /* Métodos de Pago */
+    .payment-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .btn-pay {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: filter 0.3s ease;
+    }
+
+    .btn-paypal {
+      background: #0070ba;
+    }
+
+    .btn-mercadopago {
+      background: #009ee3;
+    }
+
+    .btn-transfer {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-pay:hover {
+      filter: brightness(1.15);
+    }
+
+    .bank-details {
+      display: none;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.6;
+      border: 1px dashed var(--border-color);
+    }
+
+    @media (max-width: 480px) {
+      .amount-options {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="galaxy"></canvas>
+
+  <div class="container">
+    <a href="index.html" class="btn-volver">← Volver al inicio</a>
+
+    <div class="header-section">
+      <h1>Apoya a <span>LOVE CODE</span></h1>
+      <p>Tu donación nos ayuda a seguir creando y manteniendo plantillas libres e interactivas para todos.</p>
+    </div>
+
+    <div class="amount-title">Selecciona un monto sugerido ($USD):</div>
+    <div class="amount-options">
+      <button class="amount-btn" onclick="selectAmount(this, 2)">$2.00</button>
+      <button class="amount-btn active" onclick="selectAmount(this, 5)">$5.00</button>
+      <button class="amount-btn" onclick="selectAmount(this, 10)">$10.00</button>
+    </div>
+
+    <div class="amount-title">Elige tu método de pago preferido:</div>
+    <div class="payment-methods">
+      <a href="https://paypal.me/tu-usuario" target="_blank" id="paypalLink" class="btn-pay btn-paypal">
+        💙 Donar con PayPal
+      </a>
+      <a href="https://mpago.la/tu-link" target="_blank" class="btn-pay btn-mercadopago">
+        💳 Donar con Mercado Pago / Tarjeta
+      </a>
+      <button class="btn-pay btn-transfer" onclick="toggleBankDetails()">
+        🏦 Transferencia Bancaria
+      </button>
+
+      <div class="bank-details" id="bankDetails">
+        <p><strong>Banco:</strong> Banco Pichincha / Guayaquil</p>
+        <p><strong>Tipo de cuenta:</strong> Ahorros</p>
+        <p><strong>Titular:</strong> Nombre Apellido</p>
+        <p><strong>Número:</strong> 2200000000</p>
+        <p><em>Envía tu comprobante de pago por WhatsApp mediante el botón de reporte.</em></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedMonto = 5;
+
+    function selectAmount(btn, monto) {
+      document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedMonto = monto;
+      
+      // Actualizar enlace de paypal dinámicamente si usas paypal.me
+      document.getElementById('paypalLink').href = `https://paypal.me/tu-usuario/${monto}`;
+    }
+
+    function toggleBankDetails() {
+      const details = document.getElementById('bankDetails');
+      details.style.display = details.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Canvas Galaxia
+    const c = document.getElementById('galaxy'), x = c.getContext('2d');
+    c.width = window.innerWidth; c.height = window.innerHeight;
+    let stars = Array.from({length: 200}, () => ({
+      x: Math.random() * c.width,
+      y: Math.random() * c.height,
+      r: Math.random() * 1.5,
+      s: Math.random() * 0.5
+    }));
+    function draw() {
+      x.fillStyle = '#050510'; x.fillRect(0, 0, c.width, c.height);
+      stars.forEach(s => {
+        x.beginPath(); x.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        x.fillStyle = 'white'; x.fill();
+        s.y += s.s; if (s.y > c.height) s.y = 0;
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
+</html>
